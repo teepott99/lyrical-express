@@ -9,6 +9,10 @@ const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
 
+//Added for auth
+const authRoutes = require('./routes/auth-routes');
+const session    = require('express-session');
+const passport   = require('passport');
 
 mongoose.Promise = Promise;
 mongoose
@@ -49,7 +53,28 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 // default value for title local
 app.locals.title = 'Express - Generated with IronGenerator';
 
+//Added for Auth
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/angular-auth');
 
+const passportSetup = require('./config/passport');
+passportSetup(passport);
+
+app.use(session({
+  secret: 'angular auth passport secret shh',
+  resave: true,
+  saveUninitialized: true,
+  cookie : { httpOnly: true, maxAge: 2419200000 }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/', authRoutes);
+
+app.use((req, res, next) => {
+  res.sendfile(__dirname + '/public/index.html');
+});
 
 const index = require('./routes/index');
 app.use('/', index);
