@@ -34,6 +34,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+const passportSetup = require('./config/passport');
+passportSetup(passport);
+
+app.use(session({
+  secret: 'lyrical auth passport secret shh',
+  resave: true,
+  saveUninitialized: true,
+  cookie : { httpOnly: true, maxAge: 2419200000 }
+}));
+
 // Express View engine setup
 
 app.use(require('node-sass-middleware')({
@@ -54,18 +64,10 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 app.locals.title = 'Express - Generated with IronGenerator';
 
 //Added for Auth
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/angular-auth');
+// const mongoose = require('mongoose');
+// mongoose.connect('mongodb://localhost/angular-auth');
 
-const passportSetup = require('./config/passport');
-passportSetup(passport);
 
-app.use(session({
-  secret: 'angular auth passport secret shh',
-  resave: true,
-  saveUninitialized: true,
-  cookie : { httpOnly: true, maxAge: 2419200000 }
-}));
 
 app.use(passport.initialize());
 app.use(passport.session());
