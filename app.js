@@ -8,12 +8,8 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
-
-
-//Added for auth
-const authRoutes = require('./routes/auth-routes');
 const session    = require('express-session');
-const MongoStore    = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo')(session);
 const passport   = require('passport');
 
 mongoose.Promise = Promise;
@@ -40,7 +36,7 @@ const passportSetup = require('./config/passport');
 passportSetup(passport);
 
 app.use(session({
-  secret: 'lyrical auth passport secret shh',
+  secret: 'lyrical',
   resave: true,
   saveUninitialized: true,
   cookie : { httpOnly: true, maxAge: 2419200000 },
@@ -64,26 +60,26 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
 
 
+
+
 // default value for title local
-app.locals.title = 'Express - Generated with IronGenerator';
-
-//Added for Auth
-// const mongoose = require('mongoose');
-// mongoose.connect('mongodb://localhost/angular-auth');
-
-
+app.locals.title = 'Lyrical';
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', authRoutes);
+
 
 app.use((req, res, next) => {
   res.sendfile(__dirname + '/public/index.html');
 });
 
 const index = require('./routes/index');
+const authRoutes = require('./routes/auth-routes');
+const litRoutes = require('./routes/literature');
 app.use('/', index);
+app.use('/', authRoutes);
+app.use('/', litRoutes);
 
 
 module.exports = app;

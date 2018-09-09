@@ -4,14 +4,13 @@ const router     = express.Router();
 // Literature model
 const Literature = require('../models/lit-model');
 
-
-
 // Add lit to db
 router.post('/lit-post', (req, res, next) => {
   const {title, author, type, text} =  req.body;
+  const user = req.session.passport.user;
 
   const newLit = new Literature ({
-    user: req.session.passport.user,
+    user,
     title,
     author,
     type,
@@ -20,12 +19,18 @@ router.post('/lit-post', (req, res, next) => {
 
   newLit.save((err) => {
     if (err) {
-      res.status(400).json({ message: `Something went wrong, err ${err}` });
+      res.status(400).json({ message: 'Something went wrong' });
       return;
     }
-  })
 
-  res.status(200).json(req.user);
+    req.login(newLit, (err) => {
+      if (err) {
+        res.status(500).json({ message: 'Something went wrong' });
+        return;
+      }
+      res.status(200).json(req.user);
+    });
+  });
 });
 
 // Get lit by id
