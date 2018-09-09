@@ -6,6 +6,12 @@ const noteSchema = new Schema({
   postedBy: {
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User'},
+  lit: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Literature'},
+  lineRef: {
+    type: String,
+  }, 
   text: {
     type: String,
     required: true,

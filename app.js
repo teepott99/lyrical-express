@@ -53,13 +53,10 @@ app.use(require('node-sass-middleware')({
 }));
       
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-app.use(express.static(path.join(__dirname, 'public')));
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'hbs');
+// app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
-
-
-
 
 
 // default value for title local
@@ -69,17 +66,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-
-app.use((req, res, next) => {
-  res.sendfile(__dirname + '/public/index.html');
-});
-
 const index = require('./routes/index');
 const authRoutes = require('./routes/auth-routes');
 const litRoutes = require('./routes/literature');
 app.use('/', index);
 app.use('/', authRoutes);
-app.use('/', litRoutes);
+app.use('/lit-post', litRoutes);
 
 
 module.exports = app;

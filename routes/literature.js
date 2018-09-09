@@ -1,34 +1,43 @@
 const express    = require('express');
+const passport   = require('passport');
 const router     = express.Router();
+// const ensureLogin = require("connect-ensure-login");
 
 // Literature model
 const Literature = require('../models/lit-model');
 
 // Add lit to db
-router.post('/lit-post', (req, res, next) => {
-  const {title, author, type, text} =  req.body;
-  const user = req.session.passport.user;
+router.post('/', (req, res, next) => {
+  const {user, title, author, type, text, notes} =  req.body;
+  // const user = req.passport.user;
+  // console.log("user", user);
+
+  // if (!title || !author || !text) {
+  //   res.status(400).json({ message: 'Please fill in all fields.' });
+  //   return;
+  // }
 
   const newLit = new Literature ({
     user,
     title,
     author,
     type,
-    text
+    text,
+    notes
   });
 
   newLit.save((err) => {
     if (err) {
-      res.status(400).json({ message: 'Something went wrong' });
+      res.status(400).json({ message: 'Something went wrong', err });
       return;
     }
 
     req.login(newLit, (err) => {
       if (err) {
-        res.status(500).json({ message: 'Something went wrong' });
+        res.status(500).json({ message: 'Something went wrong', err });
         return;
       }
-      res.status(200).json(req.user);
+      res.status(200).json(lit);
     });
   });
 });
