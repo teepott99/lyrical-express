@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Schema   = mongoose.Schema;
 
 const litSchema = new Schema({
-  dateCreated: { type : Date, default: Date.now },
-  postedBy: {
+  // dateCreated: { type : Date, default: Date.now },
+  user: {
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User'},
   title: {

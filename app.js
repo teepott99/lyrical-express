@@ -9,9 +9,11 @@ const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
 
+
 //Added for auth
 const authRoutes = require('./routes/auth-routes');
 const session    = require('express-session');
+const MongoStore    = require('connect-mongo')(session);
 const passport   = require('passport');
 
 mongoose.Promise = Promise;
@@ -41,7 +43,9 @@ app.use(session({
   secret: 'lyrical auth passport secret shh',
   resave: true,
   saveUninitialized: true,
-  cookie : { httpOnly: true, maxAge: 2419200000 }
+  cookie : { httpOnly: true, maxAge: 2419200000 },
+  store: new MongoStore( { mongooseConnection: mongoose.connection }),
+  ttl: 24 * 60 * 60 // 1 day
 }));
 
 // Express View engine setup

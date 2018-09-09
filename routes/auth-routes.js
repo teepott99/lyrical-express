@@ -7,12 +7,13 @@ const User       = require('../models/user-model');
 
 const authRoutes = express.Router();
 
-authRoutes.post('/signup', (req, res, next) => {
-  const username = req.body.username;
-  const password = req.body.password;
 
-  if (!username || !password) {
-    res.status(400).json({ message: 'Provide username and password' });
+//Sign Up
+authRoutes.post('/signup', (req, res, next) => {
+  const {username, email, password} = req.body;
+
+  if (!username || !email || !password) {
+    res.status(400).json({ message: 'Provide username, email and password' });
     return;
   }
 
@@ -27,6 +28,7 @@ authRoutes.post('/signup', (req, res, next) => {
 
     const theUser = new User({
       username,
+      email,
       password: hashPass
     });
 
@@ -49,6 +51,7 @@ authRoutes.post('/signup', (req, res, next) => {
 });
 });
 
+//Login
 authRoutes.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, theUser, failureDetails) => {
     if (err) {
@@ -73,6 +76,7 @@ authRoutes.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
+//Logout
 authRoutes.post('/logout', (req, res, next) => {
   req.logout();
   res.status(200).json({ message: 'Success' });
